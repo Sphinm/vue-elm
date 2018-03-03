@@ -1,6 +1,6 @@
 <template>
     <div>
-      我是苏敏
+      我是 seller 列表
     </div>
 </template>
 
