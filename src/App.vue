@@ -30,9 +30,9 @@
     created() {
       const url = debug ? '/api/seller' : 'http://ustbhuangyi.com/sell/api/seller';
       this.$http.get(url + '?id=' + this.seller.id).then((response) => {
-        if (response.body.errno === ERR_OK) {
-          this.seller = response.body.data;
-
+        response = response.body
+        if (response.errno === ERR_OK) {
+          this.seller = response.data;
         }
       })
     },
