@@ -5,6 +5,9 @@
 ## Build Setup
 
 ``` bash
+# clone project
+git clone https://github.com/suminhohu/vue-elm.git
+
 # install dependencies
 npm install
 
