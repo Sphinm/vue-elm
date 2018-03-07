@@ -1,71 +1,134 @@
 <template>
-    <div class="goods">
-      <div class="menu-wrapper">
-        <ul>
-          <li v-for="item in goods" class="menu-item">
+  <div class="goods">
+    <div class="menu-wrapper" ref="menuWrapper">
+      <ul>
+        <li v-for="(item, index) in goods" class="menu-item" :class="{'current': currentIndex === index}"
+            @click="selectMenu(index, $event)" ref="menuList">
           <span class="text border-1px">
             <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
             {{ item.name }}
           </span>
-          </li>
-        </ul>
-      </div>
-      <div class="foods-wrapper">
-        <ul>
-          <li v-for="item in goods" class="food-list">
-            <h1 class="title">{{ item.name }}</h1>
-            <ul>
-              <li v-for="food in item.foods" class="food-item border-1px">
-                <div class="icon">
-                  <img width="57" height="57" :src="food.icon">
-                </div>
-                <div class="content">
-                  <h2 class="name">{{ food.name }}</h2>
-                  <p class="desc">{{ food.description }}</p>
-                  <div class="extra">
-                    <span>月售{{ food.sellCount }}份</span>
-                    <span>好评率{{ food.rating }}%</span>
-                  </div>
-                  <div class="price">
-                    <span class="now">￥{{ food.price }}</span>
-                    <span class="old" v-show="food.oldPrice">￥{{ food.oldPrice }}</span>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+        </li>
+      </ul>
     </div>
+    <div class="foods-wrapper" ref="foodsWrapper">
+      <ul>
+        <li v-for="item in goods" class="food-list" ref="foodList">
+          <h1 class="title">{{ item.name }}</h1>
+          <ul>
+            <li v-for="food in item.foods" class="food-item border-1px">
+              <div class="icon">
+                <img width="57" height="57" :src="food.icon">
+              </div>
+              <div class="content">
+                <h2 class="name">{{ food.name }}</h2>
+                <p class="desc">{{ food.description }}</p>
+                <div class="extra">
+                  <span>月售{{ food.sellCount }}份</span>
+                  <span>好评率{{ food.rating }}%</span>
+                </div>
+                <div class="price">
+                  <span class="now">￥{{ food.price }}</span>
+                  <span class="old" v-show="food.oldPrice">￥{{ food.oldPrice }}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
   const ERR_OK = 0;
   const debug = process.env.NODE_ENV !== 'production';
+  import BScroll from "better-scroll"
 
-    export default {
-      props: {
-        seller: {
-          type: Object
-        }
-      },
-      data() {
-        return {
-          goods: []
-        }
-      },
-      created() {
-        this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+  const log = console.log.bind(console)
 
-        const url = debug ? '/api/goods' : 'http://ustbhuangyi.com/sell/api/goods';
-        this.$http.get(url).then((response) => {
-          response = response.body
-          if (response.errno === ERR_OK) {
-            this.goods = response.data
+  export default {
+    props: {
+      seller: {
+        type: Object
+      }
+    },
+    data() {
+      return {
+        goods: [],
+        listHeight: [],
+        scrollY: 0
+      }
+    },
+    computed: {
+      currentIndex() {
+        for (let i = 0; i < this.listHeight.length; i++) {
+          let height1 = this.listHeight[i]
+          let height2 = this.listHeight[i + 1]
+          if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
+            this._followScroll(i)
+            return i
           }
+        }
+        return 0
+      }
+    },
+    created() {
+      this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+      const url = debug ? '/api/goods' : 'http://ustbhuangyi.com/sell/api/goods'
+
+      this.$http.get(url).then((response) => {
+        response = response.body
+        if (response.errno === ERR_OK) {
+          this.goods = response.data
+          this.$nextTick(() => {
+            this._initScoll()
+            this._calculateHeight()
+          })
+
+        }
+      })
+    },
+    methods: {
+      selectMenu(index, event) {
+        log(index)
+        if (!event._constructed) return
+        let foodList = this.$refs.foodList
+        let el = foodList[index]
+
+        this.foodsScoll.scrollToElement(el, 500)
+      },
+      _initScoll() {
+        this.menuScoll = new BScroll(this.$refs.menuWrapper, {
+          click: true
         })
+
+        this.foodsScoll = new BScroll(this.$refs.foodsWrapper, {
+          probeType: 3,
+          click: true
+        })
+        this.foodsScoll.on('scroll', (pos) => {
+          this.scrollY = Math.abs(Math.round(pos.y))
+        })
+      },
+      _calculateHeight() {
+        let foodList = this.$refs.foodList
+
+        let height = 0
+        this.listHeight.push(height)
+        for (let i = 0; i < foodList.length; i++) {
+          let item = foodList[i]
+          height += item.clientHeight
+          this.listHeight.push(height)
+        }
+      },
+      _followScroll(index) {
+        let menuList = this.$refs.menuList;
+        let el = menuList[index];
+        this.menuScoll.scrollToElement(el, 300, 0, -100);
       }
     }
+  }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -88,6 +151,14 @@
         height 54px
         padding 0 12px
         line-height 14px
+        &.current
+          position relative
+          z-index: 10
+          margin-top -1px
+          background #fff
+          font-weight 700
+          .text
+            border-none()
         .icon
           display inline-block
           vertical-align: top
@@ -147,8 +218,9 @@
             color rgb(147, 153, 159)
           .desc
             margin-bottom 8px
+            line-height 12px
           .extra
-            &.count
+            .count
               margin-right 12px
           .price
             line-height 24px
