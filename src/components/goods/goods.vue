@@ -37,14 +37,16 @@
         </li>
       </ul>
     </div>
+    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
 <script>
+  import BScroll from "better-scroll"
+  import shopcart from "../../components/shopcart/shopcart.vue"
+
   const ERR_OK = 0;
   const debug = process.env.NODE_ENV !== 'production';
-  import BScroll from "better-scroll"
-
   const log = console.log.bind(console)
 
   export default {
@@ -96,7 +98,7 @@
         let foodList = this.$refs.foodList
         let el = foodList[index]
 
-        this.foodsScoll.scrollToElement(el, 500)
+        this.foodsScoll.scrollToElement(el, 300)
       },
       _initScoll() {
         this.menuScoll = new BScroll(this.$refs.menuWrapper, {
@@ -127,6 +129,9 @@
         let el = menuList[index];
         this.menuScoll.scrollToElement(el, 300, 0, -100);
       }
+    },
+    components: {
+      shopcart
     }
   }
 </script>
