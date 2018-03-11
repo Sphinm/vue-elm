@@ -102,12 +102,12 @@
     methods: {
       drop(el) {
         for (let i = 0; i < this.balls.length; i++) {
-          let ball = this.balls[i]
+          let ball = this.balls[i];
           if (!ball.show) {
-            ball.show = true
-            ball.el = el
-            this.dropBalls.push(ball)
-            return
+            ball.show = true;
+            ball.el = el;
+            this.dropBalls.push(ball);
+            return;
           }
         }
       },
@@ -131,7 +131,7 @@
           }
         }
       },
-      dropping(el, done) {
+      dropping(el) {
         /*  el.offsetHeight 可以手动触发浏览器重绘 */
         let rf = el.offsetHeight
         this.$nextTick(() => {
@@ -140,12 +140,10 @@
           let inner = el.querySelector('.inner-hook')
           inner.style.webkitTransform = 'translate3d(0,0,0)'
           inner.style.transform = 'translate3d(0,0,0)'
-          el.addEventListener('transitionend', done)
         })
       },
       afterEnter(el) {
         let ball = this.dropBalls.shift()
-        console.log(ball)
         if (ball) {
           ball.show = false
           el.style.display = 'none'
@@ -251,12 +249,11 @@
         left 32px
         bottom 22px
         z-index 200
-        &.drop-transition
-          transition all 0.3s
-          .inner
-            height 16px
-            border-radius 50% 50%
-            background rgb(0, 160, 200)
-            width 16px
-            transition all 0.3s
+        transition: all 0.3s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+        .inner
+          height 16px
+          border-radius 50% 50%
+          background rgb(0, 160, 200)
+          width 16px
+          transition all 0.3s linear
 </style>
