@@ -19,7 +19,7 @@
             <span class="old" v-show="food.oldPrice">￥{{ food.oldPrice }}</span>
           </div>
           <div class="cartcontrol-wrapper">
-            <cartcontrol :food="food"></cartcontrol>
+            <cartcontrol @add="addFood" :food="food"></cartcontrol>
           </div>
           <transition name="fade">
             <div @click.stop.prevent="addFirst" class="buy" v-show="!food.count || food.count===0">
@@ -66,9 +66,12 @@
       },
       addFirst(event) {
         if (!event._constructed) return
-        console.log(event.target)
         this.$emit('add', event.target);
         Vue.set(this.food, 'count', 1)
+      },
+      // 自定义 add 事件
+      addFood(target) {
+        this.$emit('add', target);
       },
     },
     components: {
