@@ -51,7 +51,6 @@
 
   const ERR_OK = 0;
   const debug = process.env.NODE_ENV !== 'production';
-  const log = console.log.bind(console)
 
   export default {
     props: {
@@ -106,7 +105,6 @@
     },
     methods: {
       selectMenu(index, event) {
-        log(index)
         if (!event._constructed) return
         let foodList = this.$refs.foodList
         let el = foodList[index]
