@@ -31,19 +31,23 @@
                   <span class="now">￥{{ food.price }}</span>
                   <span class="old" v-show="food.oldPrice">￥{{ food.oldPrice }}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol @add="addFood" :food="food"></cartcontrol>
+                </div>
               </div>
             </li>
           </ul>
         </li>
-      </ul>
+      </ul>`
     </div>
-    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
 <script>
   import BScroll from "better-scroll"
   import shopcart from "../../components/shopcart/shopcart.vue"
+  import cartcontrol from "../../components/cartcontrol/cartcontrol.vue"
 
   const ERR_OK = 0;
   const debug = process.env.NODE_ENV !== 'production';
@@ -73,6 +77,15 @@
           }
         }
         return 0
+      },
+      selectFoods() {
+        let foods = []
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) foods.push(food)
+          });
+        });
+        return foods
       }
     },
     created() {
@@ -99,6 +112,14 @@
         let el = foodList[index]
 
         this.foodsScoll.scrollToElement(el, 300)
+      },
+      addFood(target) {
+        this._drop(target)
+      },
+      _drop(target) {
+        this.$nextTick(() => {
+          this.$refs.shopcart.drop(target)
+        })
       },
       _initScoll() {
         this.menuScoll = new BScroll(this.$refs.menuWrapper, {
@@ -131,7 +152,8 @@
       }
     },
     components: {
-      shopcart
+      shopcart,
+      cartcontrol,
     }
   }
 </script>
@@ -238,4 +260,8 @@
               font-size 10px
               color rgb(147, 153, 159)
               text-decoration line-through
+          .cartcontrol-wrapper
+            position absolute
+            bottom 12px
+            right 0
 </style>
