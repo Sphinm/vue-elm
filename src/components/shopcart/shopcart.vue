@@ -1,3 +1,5 @@
+<!-- 底栏购物车组件 -->
+
 <template>
   <div>
     <div class="shopcart">

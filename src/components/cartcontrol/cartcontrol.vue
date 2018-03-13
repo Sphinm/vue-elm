@@ -1,5 +1,6 @@
+<!-- 添加和修改商品 -->
+
 <template>
-  <!-- 新增和修改商品 -->
   <div class="cartcontrol">
     <transition name="move">
       <div class="cart-decrease" v-show="food.count>0" @click.stop.prevent="decreaseCart">

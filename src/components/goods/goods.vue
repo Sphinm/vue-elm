@@ -1,3 +1,8 @@
+<!--
+     商品左右展示页
+     包含 cartcontrol、shopcart 以及 food 子组件
+ -->
+
 <template>
   <div>
     <div class="goods">

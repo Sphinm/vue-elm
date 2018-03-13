@@ -1,47 +1,47 @@
 <template>
-    <div class="star" :class="starType">
-      <span v-for="(item,index) in itemClasses" :class="item" class="star-item" :key="index"></span>
-    </div>
+  <div class="star" :class="starType">
+    <span v-for="(item, index) in itemClasses" :class="item" class="star-item" :key="index"></span>
+  </div>
 </template>
 
 <script>
-    // 定义常量
-    const LENGTH = 5
-    const CLS_ON = 'on'
-    const CLS_HALF = 'half'
-    const CLS_OFF = 'off'
+  // 定义常量
+  const LENGTH = 5
+  const CLS_ON = 'on'
+  const CLS_HALF = 'half'
+  const CLS_OFF = 'off'
 
-    export default {
-      props: {
-        size: {
-          type: Number
-        },
-        score: {
-          type: Number
-        }
+  export default {
+    props: {
+      size: {
+        type: Number
       },
-      computed: {
-        starType() {
-          return 'star-' + this.size
-        },
-        itemClasses() {
-          let result = []
-          let score = Math.floor(this.score*2) / 2
-          let hasDecimal = score % 1 !== 0
-          let integer = Math.floor(score)
-          for (let i=0; i<integer; i++) {
-            result.push(CLS_ON)
-          }
-          if (hasDecimal) {
-            result.push(CLS_HALF)
-          }
-          while (result.length < LENGTH) {
-            result.push(CLS_OFF)
-          }
-          return result
+      score: {
+        type: Number
+      }
+    },
+    computed: {
+      starType() {
+        return 'star-' + this.size
+      },
+      itemClasses() {
+        let result = []
+        let score = Math.floor(this.score * 2) / 2
+        let hasDecimal = score % 1 !== 0
+        for (let i = 0; i < score; i++) {
+          result.push(CLS_ON)
         }
+        if (hasDecimal) {
+          result.push(CLS_HALF)
+        }
+        // 这里 while 不能替换成 if
+        while (result.length < LENGTH) {
+          result.push(CLS_OFF)
+        }
+        return result
       }
     }
+  }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
