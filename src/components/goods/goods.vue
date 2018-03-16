@@ -8,7 +8,7 @@
     <div class="goods">
       <div class="menu-wrapper" ref="menuWrapper">
         <ul>
-          <li v-for="(item, index) in goods" class="menu-item" :class="{'current': currentIndex === index}"
+          <li class="menu-item" v-for="(item,index) in goods" :key="index" :class="{'current': currentIndex === index}"
               @click="selectMenu(index, $event)" ref="menuList">
             <span class="text border-1px">
               <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
@@ -44,9 +44,10 @@
               </li>
             </ul>
           </li>
-        </ul>`
+        </ul>
       </div>
-      <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+      <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice"
+                :min-price="seller.minPrice"></shopcart>
     </div>
     <food @add="addFood" :food="selectedFood" ref="food"></food>
   </div>
@@ -87,10 +88,13 @@
         }
         return 0
       },
+
+      // 有点复杂 需要再看一遍
       selectFoods() {
         let foods = []
         this.goods.forEach((good) => {
           good.foods.forEach((food) => {
+            console.log(food.count);
             if (food.count) foods.push(food)
           });
         });
@@ -109,7 +113,6 @@
             this._initScoll()
             this._calculateHeight()
           })
-
         }
       })
     },
@@ -119,12 +122,12 @@
         let foodList = this.$refs.foodList
         let el = foodList[index]
 
-        this.foodsScoll.scrollToElement(el, 300)
+        this.foodsScoll.scrollToElement(el, 300)  // 调用better-scroll 方法
       },
-      selectFood(food, event){
+      selectFood(food, event) {
         if (!event._constructed) return
         this.selectedFood = food
-        this.$refs.food.show()
+        this.$refs.food.show()  // 点击进入详情页
       },
       addFood(target) {
         this._drop(target)
@@ -135,6 +138,9 @@
           this.$refs.shopcart.drop(target)
         })
       },
+
+      // 初始化餐单栏和商品列表栏
+      // 引用的better-scroll
       _initScoll() {
         this.menuScoll = new BScroll(this.$refs.menuWrapper, {
           click: true
@@ -150,7 +156,6 @@
       },
       _calculateHeight() {
         let foodList = this.$refs.foodList
-
         let height = 0
         this.listHeight.push(height)
         for (let i = 0; i < foodList.length; i++) {
