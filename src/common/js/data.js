@@ -1,7 +1,11 @@
 export function formatDate(date, fmt) {
+  // 对年份单独处理
   if (/(y+)/.test(fmt)) {
     fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
   }
+
+  // 其他都是两位可以统一处理
+  // 补零
   let obj = {
     'M+': date.getMonth() + 1,
     'd+': date.getDate(),

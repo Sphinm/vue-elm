@@ -4,7 +4,6 @@ export function saveToLocal(id, key, value) {
     seller = {};
     seller[id] = {};
   } else {
-    console.log(seller);
     seller = JSON.parse(seller);
     if (!seller[id]) {
       seller[id] = {};
