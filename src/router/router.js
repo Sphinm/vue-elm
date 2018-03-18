@@ -1,8 +1,12 @@
+import Vue from 'vue'
+import Router from 'vue-router';
 import goods from '../components/goods/goods.vue';
 import ratings from '../components/ratings/ratings.vue';
 import seller from '../components/seller/seller.vue';
 
-export default [{
+Vue.use(Router)
+
+const routes = [{
   path: '/',
   redirect: '/goods',
 }, {
@@ -16,3 +20,8 @@ export default [{
   component: seller
 }];
 
+// 路由样式绑定
+export default new VueRouter({
+  linkActiveClass: 'active',
+  routes
+});
