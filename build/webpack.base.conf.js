@@ -44,6 +44,8 @@ module.exports = {
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
       {
+        // 对于小于 10kb 的图片会生成 base64 编码格式
+        // 大于10kb 的图片直接是链接
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {

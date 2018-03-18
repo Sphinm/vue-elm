@@ -55,9 +55,9 @@
 
 <script>
   import BScroll from "better-scroll"
-  import shopcart from "../../components/shopcart/shopcart.vue"
-  import cartcontrol from "../../components/cartcontrol/cartcontrol.vue"
-  import food from "../../components/food/food.vue"
+  import shopcart from "components/shopcart/shopcart.vue"
+  import cartcontrol from "components/cartcontrol/cartcontrol.vue"
+  import food from "components/food/food.vue"
 
   const ERR_OK = 0;
   const debug = process.env.NODE_ENV !== 'production';
