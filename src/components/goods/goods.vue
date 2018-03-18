@@ -94,7 +94,6 @@
         let foods = []
         this.goods.forEach((good) => {
           good.foods.forEach((food) => {
-            console.log(food.count);
             if (food.count) foods.push(food)
           });
         });
